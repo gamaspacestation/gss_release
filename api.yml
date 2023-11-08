@@ -1,0 +1,141 @@
+asyncapi: 2.6.0
+info:
+  title: Quantum Engine Websockets API
+  version: 0.0.1
+  description: >
+    Real-time NPC intelligence over a Websocket.
+
+
+    ### General Considerations
+
+
+    - The configuration behind the conversational intelligence functionalities
+    of this API is only prepared for demonstration purposes and may contain
+    outdated, biased, or false information.
+
+    - For simplicity of developing a proof-of-concept, authentication has been
+    disabled on this API. Do not distribute the endpoint nor send sensitive
+    information over.
+
+    - End-to-end latency while using this API depends on many factors, including
+    the reliability of the underlying large-language-model (LLM) vendor APIs and
+    your physical location.
+
+    - The API is currently only available in English.
+      
+servers:
+  public:
+    url: cyberpunk.quantum-engine.ai/session
+    protocol: wss
+    description: >
+      Quantum Engine Websocket API. Bi-directionally send and receive audio
+      packets in JSON messages.
+channels:
+  /:
+    publish:
+      description: Send messages to the API for authentication and English input
+      operationId: pub_en
+      message:
+        oneOf:
+          - $ref: '#/components/messages/audioPacketInput'
+          - $ref: '#/components/messages/authentication'
+    subscribe:
+      description: Messages that you receive from the API for English input
+      operationId: sub_en
+      message:
+        oneOf:
+          - $ref: '#/components/messages/audioPacketReturn'
+components:
+  messages:
+    authentication:
+      summary: Authentication message.
+      description: >-
+        Authentication message sent to the API to authenticate the user. `token`
+        is the authentication token provided by the user, which needs to be
+        obtained from https://cyberpunk.quantum-engine.ai/. `language` is the
+        language of the user, which is currently only available in English, or
+        `en`.
+      payload:
+        $ref: '#/components/schemas/authentication'
+      examples:
+        - payload:
+            global:
+              initialize:
+                token: SXLROLE1ANYIQBRXDAZWE5B7XCSI49PE
+                language: en
+    audioPacketInput:
+      summary: Real time audio input.
+      description: >-
+        Audio input captured from the user's microphone in packets using raw
+        pulse-code modulation (PCM) format. Each packet is in a single-channel,
+        16-bit format with a sampling rate of 16 kHz. The binary buffer should
+        be encoded in string in base64 format. `uuid` represents a unique
+        identifier for each player, and `character` represents the in-database
+        (TweakDB) identifier for each NPC in Cyberpunk 2077. `reason` is an
+        internal identifier used to classify different requests, currently set
+        to "play" all the time. It is recommended that each packet be between
+        20ms-100ms in length and that packets be sent in real-time.
+      payload:
+        $ref: '#/components/schemas/audioPacketInput'
+      examples:
+        - payload:
+            kernel:
+              userAudio:
+                audio: UklGRiQAAABXQVZFZm10IBAAAAABAAEAwF0AAIC7AAACABAAZGF0YQAAAAA=
+                uuid: 17f9bdbf-0146-4852-84e0-3e097483a02b
+                character: crowd_npc_male
+    audioPacketReturn:
+      summary: AI Audio response.
+      description: >-
+        Audio response from AI, to be played to the speaker in packets using raw
+        pulse-code modulation (PCM) format. Each packet is in a single-channel,
+        16-bit format with a sampling rate of 16 kHz. The binary buffer is
+        encoded in base64 strings for transport. `message` is the text
+        corresponding to the audio, and `reason` is an internal identifier used
+        to classify different requests, currently set to "play" all the time.
+      payload:
+        $ref: '#/components/schemas/audioPacketReturn'
+      examples:
+        - payload:
+            kernel:
+              audio: UklGRiQAAABXQVZFZm10IBAAAAABAAEAwF0AAIC7AAACABAAZGF0YQAAAAA=
+              assistantResponse: 'Wake up, Samurai. We have a city to burn.'
+  schemas:
+    authentication:
+      type: object
+      properties:
+        global:
+          type: object
+          properties:
+            initialize:
+              type: object
+              properties:
+                token:
+                  type: string
+                language:
+                  type: string
+    audioPacketInput:
+      type: object
+      properties:
+        kernel:
+          type: object
+          properties:
+            userAudio:
+              type: object
+              properties:
+                audio:
+                  type: string
+                uuid:
+                  type: string
+                character:
+                  type: string
+    audioPacketReturn:
+      type: object
+      properties:
+        kernel:
+          type: object
+          properties:
+            audio:
+              type: string
+            assistantResponse:
+              type: string

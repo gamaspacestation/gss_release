@@ -1,0 +1,35 @@
+{
+	"FileVersion": 3,
+	"Version": 1,
+	"VersionName": "1.7",
+	"FriendlyName": "Internet Browser",
+	"Description": "Default web browser widget with extended features like multi tabs, bookmarks, history, web url masking, whitelisting and so on.",
+	"Category": "YetiTech Studios",
+	"CreatedBy": "YetiTech Studios",
+	"CreatedByURL": "https://www.yetitechstudios.com",
+	"DocsURL": "",
+	"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/content/7209dd51067b400fb57cebf21987b629",
+	"SupportURL": "https://discord.gg/S7ykM2q",
+	"EngineVersion": "5.2",
+	"CanContainContent": true,
+	"Installed": true,
+	"Modules": [
+		{
+			"Name": "InternetBrowserUMG",
+			"Type": "Runtime",
+			"LoadingPhase": "PreDefault",
+			"PlatformAllowList": [
+				"Win64",
+				"Linux",
+				"Mac",
+				"IOS"
+			]
+		}
+	],
+	"Plugins": [
+		{
+			"Name": "WebBrowserWidget",
+			"Enabled": true
+		}
+	]
+}

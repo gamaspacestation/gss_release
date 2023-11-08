@@ -1,0 +1,23 @@
+{
+  "FileVersion" : 3,
+  "Version" : 1,
+  "VersionName" : "0.0.1",
+  "FriendlyName" : "Realistic Eye Movement",
+  "Description" : "Allows for realistic character eye movement.",
+  "Category" : "Other",
+  "CreatedBy" : "AnubisAI",
+  "CreatedByURL" : "https://www.example.com",
+  "EnabledByDefault" : true,
+  "Modules": [
+    {
+      "Name": "RealisticEyeMovement",
+      "Type": "Runtime",
+      "LoadingPhase": "Default",
+      "WhitelistPlatforms" : [
+        "Android",
+        "Win64",
+        "Mac"
+      ]
+    }
+  ]
+}
